@@ -14,11 +14,11 @@ public class Maze : MonoBehaviour {
 	public void Generate()
 	{
 		cells = new MazeCell[size.x, size.z];
-		for (int x = 0; x < size.x; x++) {
-			for (int z = 0; z < size.z; z++) {
-				//Create cell - instantiate, name it, parent it, position it
-				CreateCell(new IntVector2(x,z));
-			}
+		IntVector2 currentCoord = RandomCoordinates;
+		while(isCoordInRange(currentCoord) && !doesCellExitsAt(currentCoord))
+		{
+			CreateCell (currentCoord);
+			currentCoord += MazeDirections.RandomDirection().ToIntVector2();
 		}
 	}
 
@@ -32,6 +32,8 @@ public class Maze : MonoBehaviour {
 		cells [_coordinates.x, _coordinates.z] = cellIns;
 	}
 
+
+	#region Helper functions
 	//Property to generate random cell coordinate
 	public IntVector2 RandomCoordinates 
 	{
@@ -41,8 +43,19 @@ public class Maze : MonoBehaviour {
 		}
 	}
 
+	//Checks if passed coordinate is within boundary
 	public bool isCoordInRange(IntVector2 _coordinate)
 	{
 		return (_coordinate.x >= 0 && _coordinate.z >= 0 && _coordinate.x < size.x && _coordinate.z < size.z);
 	}
+
+	//Checks if there exists a cell at a given coordinate
+	public bool doesCellExitsAt(IntVector2 _coordinate)
+	{
+		if (cells [_coordinate.x, _coordinate.z] == null) {
+			return false;
+		} else
+			return true;
+	}
+	#endregion
 }
