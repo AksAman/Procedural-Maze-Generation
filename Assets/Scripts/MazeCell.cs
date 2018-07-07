@@ -4,13 +4,5 @@ using UnityEngine;
 
 public class MazeCell : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+	public IntVector2 coordinates;
 }
