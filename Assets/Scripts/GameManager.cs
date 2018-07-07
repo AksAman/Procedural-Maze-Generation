@@ -23,16 +23,17 @@ public class GameManager : MonoBehaviour {
 	void BeginGame ()
 	{
 		//Create a maze
-		Debug.Log ("New Game Started......!");
+//		Debug.Log ("New Game Started......!");
 		mazeInstance = Instantiate (mazeprefab) as Maze;
 
 		// Generate maze
-		mazeInstance.Generate ();
+		StartCoroutine(mazeInstance.Generate ());
 	}
 
 	void RestartGame ()
 	{
 		Debug.Log ("Restarting......!");
+		StopAllCoroutines ();
 		Destroy (mazeInstance.gameObject);
 		BeginGame ();
 	}

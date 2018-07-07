@@ -11,18 +11,46 @@ public class Maze : MonoBehaviour {
 	public MazeCell cellPrefab;
 	private MazeCell[,] cells;
 
-	public void Generate()
+	public IEnumerator Generate()
 	{
 		cells = new MazeCell[size.x, size.z];
-		IntVector2 currentCoord = RandomCoordinates;
-		while(isCoordInRange(currentCoord) && !doesCellExitsAt(currentCoord))
+
+		// List to keep track of active cells
+		List<MazeCell> activeCells = new List<MazeCell> ();
+
+		// Creating First cell and adding it to the list
+		DoFirstGenerationStep (activeCells);
+
+		while(activeCells.Count > 0)
 		{
-			CreateCell (currentCoord);
-			currentCoord += MazeDirections.RandomDirection().ToIntVector2();
+			yield return new WaitForSeconds (0.05f);
+			DoNextGenerationStep (activeCells);
 		}
 	}
 
-	private void CreateCell(IntVector2 _coordinates)
+	void DoFirstGenerationStep(List<MazeCell> _activeCells)
+	{
+		_activeCells.Add (CreateCell (RandomCoordinates));
+	}
+
+	void DoNextGenerationStep(List<MazeCell> _activeCells)
+	{
+		int currentIndex = _activeCells.Count - 1;
+		MazeCell currentCell = _activeCells [currentIndex];
+		IntVector2 currentCoords = currentCell.coordinates;
+		IntVector2 nextCellCoords = currentCoords + MazeDirections.RandomDirection ().ToIntVector2 ();
+
+		if(isCoordInRange(nextCellCoords) && !doesCellExitsAt(nextCellCoords))
+		{
+			_activeCells.Add (CreateCell (nextCellCoords));
+		}
+		else
+		{
+			_activeCells.RemoveAt (currentIndex);
+		}
+	}
+
+	private MazeCell CreateCell(IntVector2 _coordinates)
 	{
 		MazeCell cellIns = Instantiate (cellPrefab) as MazeCell;
 		cellIns.coordinates = _coordinates;
@@ -30,6 +58,8 @@ public class Maze : MonoBehaviour {
 		cellIns.name = "Cell " + _coordinates.x + " " + _coordinates.z;
 		cellIns.transform.position = new Vector3 (_coordinates.x - size.x * 0.5f + 0.5f, 0, _coordinates.z - size.z * 0.5f + 0.5f);
 		cells [_coordinates.x, _coordinates.z] = cellIns;
+
+		return cellIns;
 	}
 
 
