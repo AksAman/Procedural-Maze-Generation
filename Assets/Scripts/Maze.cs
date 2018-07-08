@@ -13,7 +13,7 @@ public class Maze : MonoBehaviour {
 	public MazeWall mazeWallPrefab;
 	public MazePassage mazePassPrefab;
 
-	public IEnumerator Generate()
+	public void Generate()
 	{
 		cells = new MazeCell[size.x, size.z];
 
@@ -22,12 +22,12 @@ public class Maze : MonoBehaviour {
 
 		// Creating First cell and adding it to the list
 		DoFirstGenerationStep (activeCells);
-
 		while(activeCells.Count > 0)
 		{
-			yield return new WaitForSeconds (0.05f);
+//			yield return new WaitForSeconds (0.05f);
 			DoNextGenerationStep (activeCells);
 		}
+		Debug.Log (transform.childCount.ToString ());
 	}
 
 	void DoFirstGenerationStep(List<MazeCell> _activeCells)
@@ -39,8 +39,14 @@ public class Maze : MonoBehaviour {
 	{
 		int currentIndex = _activeCells.Count - 1;
 		MazeCell currentCell = _activeCells [currentIndex];
+		if(currentCell.isFullyInitialized())
+		{
+			_activeCells.RemoveAt (currentIndex);
+			return;
+		}
+
 		IntVector2 currentCoords = currentCell.coordinates;
-		MazeDirection nextDirection = MazeDirections.RandomDirection ();
+		MazeDirection nextDirection = currentCell.RandomUninitializedDirection;
 		IntVector2 nextCellCoords = currentCoords + nextDirection.ToIntVector2 ();
 
 
@@ -59,14 +65,14 @@ public class Maze : MonoBehaviour {
 			else
 			{
 				CreateWall (currentCell, neighbourCell, nextDirection);
-				_activeCells.RemoveAt (currentIndex);
+//				_activeCells.RemoveAt (currentIndex);
 			}
 		}
 		else
 		{
 			//Create wall
 			CreateWall (currentCell, null, nextDirection);
-			_activeCells.RemoveAt (currentIndex);
+//			_activeCells.RemoveAt (currentIndex);
 
 		}
 	}
@@ -76,7 +82,7 @@ public class Maze : MonoBehaviour {
 		MazeCell cellIns = Instantiate (cellPrefab) as MazeCell;
 		cellIns.coordinates = _coordinates;
 		cellIns.transform.parent = this.transform;
-		cellIns.name = "Cell " + _coordinates.x + " " + _coordinates.z;
+		cellIns.name = "Cell " + _coordinates.x + ", " + _coordinates.z;
 		cellIns.transform.position = new Vector3 (_coordinates.x - size.x * 0.5f + 0.5f, 0, _coordinates.z - size.z * 0.5f + 0.5f);
 		cells [_coordinates.x, _coordinates.z] = cellIns;
 
