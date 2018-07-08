@@ -10,6 +10,8 @@ public class Maze : MonoBehaviour {
 	//Needs reference to individual cell prefabs
 	public MazeCell cellPrefab;
 	private MazeCell[,] cells;
+	public MazeWall mazeWallPrefab;
+	public MazePassage mazePassPrefab;
 
 	public IEnumerator Generate()
 	{
@@ -38,15 +40,34 @@ public class Maze : MonoBehaviour {
 		int currentIndex = _activeCells.Count - 1;
 		MazeCell currentCell = _activeCells [currentIndex];
 		IntVector2 currentCoords = currentCell.coordinates;
-		IntVector2 nextCellCoords = currentCoords + MazeDirections.RandomDirection ().ToIntVector2 ();
+		MazeDirection nextDirection = MazeDirections.RandomDirection ();
+		IntVector2 nextCellCoords = currentCoords + nextDirection.ToIntVector2 ();
 
-		if(isCoordInRange(nextCellCoords) && !doesCellExitsAt(nextCellCoords))
+
+		if(isCoordInRange(nextCellCoords))
 		{
-			_activeCells.Add (CreateCell (nextCellCoords));
+			MazeCell neighbourCell = GetCell (nextCellCoords);
+			// Check if cell already or not 
+			if(neighbourCell == null)
+			{
+				// i.e. cell doesn't exists
+				neighbourCell = CreateCell (nextCellCoords);
+				CreatePassage (currentCell, neighbourCell, nextDirection);
+				_activeCells.Add (neighbourCell);
+			}
+
+			else
+			{
+				CreateWall (currentCell, neighbourCell, nextDirection);
+				_activeCells.RemoveAt (currentIndex);
+			}
 		}
 		else
 		{
+			//Create wall
+			CreateWall (currentCell, null, nextDirection);
 			_activeCells.RemoveAt (currentIndex);
+
 		}
 	}
 
@@ -62,6 +83,25 @@ public class Maze : MonoBehaviour {
 		return cellIns;
 	}
 
+	void CreateWall(MazeCell _cell, MazeCell _otherCell, MazeDirection _direction)
+	{
+		MazeWall mazeWall = Instantiate (mazeWallPrefab) as MazeWall;
+		mazeWall.Initialise (_cell, _otherCell, _direction);
+
+		if (_otherCell != null) {
+			mazeWall = Instantiate (mazeWallPrefab) as MazeWall;
+			mazeWall.Initialise (_otherCell, _cell, _direction.GetOpposite ());
+		}
+	}
+
+	void CreatePassage(MazeCell _cell, MazeCell _otherCell, MazeDirection _direction)
+	{
+		MazePassage mazePassage = Instantiate (mazePassPrefab) as MazePassage;
+		mazePassage.Initialise (_cell, _otherCell, _direction);
+
+		mazePassage = Instantiate (mazePassPrefab) as MazePassage;
+		mazePassage.Initialise (_otherCell, _cell, _direction.GetOpposite());
+	}
 
 	#region Helper functions
 	//Property to generate random cell coordinate
@@ -86,6 +126,11 @@ public class Maze : MonoBehaviour {
 			return false;
 		} else
 			return true;
+	}
+
+	public MazeCell GetCell(IntVector2 _coordinates)
+	{
+		return cells [_coordinates.x, _coordinates.z];
 	}
 	#endregion
 }
