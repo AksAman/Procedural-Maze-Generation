@@ -3,7 +3,13 @@ guid: 95176ab24bab4534288a66020dc86c1a
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - cellPrefab: {fileID: 114728662721619654, guid: e2050b3e1453f1e409e5bb578bb8b4f1,
+      type: 2}
+  - mazeWallPrefab: {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311,
+      type: 2}
+  - mazePassPrefab: {fileID: 114071457508006102, guid: 9013d1f46bb772942936eec926e7e560,
+      type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -5,16 +5,16 @@ using UnityEngine;
 public class MazeCell : MonoBehaviour {
 
 	public IntVector2 coordinates;
-	private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.count];
+	private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.Count];
 	public int initializedEdges;
 
-	public void SetEdge(MazeCellEdge _edge, MazeDirection _direction)
+	public void SetEdge(MazeCellEdge _edge, mazeDirection _direction)
 	{
 		edges[(int)_direction] = _edge;
 		initializedEdges++;
 	}
 
-	public MazeCellEdge GetEdge(MazeDirection _direction)
+	public MazeCellEdge GetEdge(mazeDirection _direction)
 	{
 		return edges [(int)_direction];
 	}
@@ -24,7 +24,7 @@ public class MazeCell : MonoBehaviour {
 		return initializedEdges == 4;
 	}
 
-	public MazeDirection RandomUninitializedDirection
+	public mazeDirection RandomUninitializedDirection
 	{
 		get{
 			int skips = Random.Range (0, 4 - initializedEdges);
@@ -32,7 +32,7 @@ public class MazeCell : MonoBehaviour {
 			for (int i = 0; i < 4; i++) {
 				if (edges [i] == null) {
 					if (skips == 0) {
-						return (MazeDirection)i;
+						return (mazeDirection)i;
 					}
 					skips -= 1;
 				}

@@ -24,7 +24,7 @@ public class Maze : MonoBehaviour {
 		DoFirstGenerationStep (activeCells);
 		while(activeCells.Count > 0)
 		{
-//			yield return new WaitForSeconds (0.05f);
+			//			yield return new WaitForSeconds (0.05f);
 			DoNextGenerationStep (activeCells);
 		}
 		Debug.Log (transform.childCount.ToString ());
@@ -46,7 +46,7 @@ public class Maze : MonoBehaviour {
 		}
 
 		IntVector2 currentCoords = currentCell.coordinates;
-		MazeDirection nextDirection = currentCell.RandomUninitializedDirection;
+		mazeDirection nextDirection = currentCell.RandomUninitializedDirection;
 		IntVector2 nextCellCoords = currentCoords + nextDirection.ToIntVector2 ();
 
 
@@ -65,14 +65,14 @@ public class Maze : MonoBehaviour {
 			else
 			{
 				CreateWall (currentCell, neighbourCell, nextDirection);
-//				_activeCells.RemoveAt (currentIndex);
+				//				_activeCells.RemoveAt (currentIndex);
 			}
 		}
 		else
 		{
 			//Create wall
 			CreateWall (currentCell, null, nextDirection);
-//			_activeCells.RemoveAt (currentIndex);
+			//			_activeCells.RemoveAt (currentIndex);
 
 		}
 	}
@@ -89,7 +89,7 @@ public class Maze : MonoBehaviour {
 		return cellIns;
 	}
 
-	void CreateWall(MazeCell _cell, MazeCell _otherCell, MazeDirection _direction)
+	void CreateWall(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
 	{
 		MazeWall mazeWall = Instantiate (mazeWallPrefab) as MazeWall;
 		mazeWall.Initialise (_cell, _otherCell, _direction);
@@ -100,7 +100,7 @@ public class Maze : MonoBehaviour {
 		}
 	}
 
-	void CreatePassage(MazeCell _cell, MazeCell _otherCell, MazeDirection _direction)
+	void CreatePassage(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
 	{
 		MazePassage mazePassage = Instantiate (mazePassPrefab) as MazePassage;
 		mazePassage.Initialise (_cell, _otherCell, _direction);
