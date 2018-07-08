@@ -17,6 +17,11 @@ public class Maze : MonoBehaviour {
 	[Range(0,1)]
 	public float doorProbability;
 
+
+	private List<MazeRoom> rooms = new List<MazeRoom>();
+	[Space]
+	public MazeRoomSetting[] roomSettings = new MazeRoomSetting[4];
+
 	private enum IndexMethod
 	{
 		Oldest,
@@ -24,6 +29,8 @@ public class Maze : MonoBehaviour {
 		Random,
 		Middle
 	}
+
+	[Space]
 	[SerializeField]
 	private IndexMethod indexMethod = new IndexMethod();
 
@@ -46,7 +53,10 @@ public class Maze : MonoBehaviour {
 
 	void DoFirstGenerationStep(List<MazeCell> _activeCells)
 	{
-		_activeCells.Add (CreateCell (RandomCoordinates));
+		MazeCell newCell = CreateCell (RandomCoordinates);
+		newCell.SetRoom (CreateRoom (-1));
+		_activeCells.Add (newCell);
+
 	}
 
 	void DoNextGenerationStep(List<MazeCell> _activeCells)
@@ -59,7 +69,6 @@ public class Maze : MonoBehaviour {
 			_activeCells.RemoveAt (currentIndex);
 			return;
 		}
-
 		IntVector2 currentCoords = currentCell.coordinates;
 		mazeDirection nextDirection = currentCell.RandomUninitializedDirection;
 		IntVector2 nextCellCoords = currentCoords + nextDirection.ToIntVector2 ();
@@ -68,6 +77,7 @@ public class Maze : MonoBehaviour {
 		if(isCoordInRange(nextCellCoords))
 		{
 			MazeCell neighbourCell = GetCell (nextCellCoords);
+
 			// Check if cell already or not 
 			if(neighbourCell == null)
 			{
@@ -76,18 +86,15 @@ public class Maze : MonoBehaviour {
 				CreatePassage (currentCell, neighbourCell, nextDirection);
 				_activeCells.Add (neighbourCell);
 			}
-
 			else
 			{
 				CreateWall (currentCell, neighbourCell, nextDirection);
-				//				_activeCells.RemoveAt (currentIndex);
 			}
 		}
 		else
 		{
 			//Create wall
 			CreateWall (currentCell, null, nextDirection);
-			//			_activeCells.RemoveAt (currentIndex);
 
 		}
 	}
@@ -119,11 +126,39 @@ public class Maze : MonoBehaviour {
 	void CreatePassage(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
 	{
 		MazePassage prefabPass = Random.value < doorProbability ? mazeDoorPrefab : mazePassPrefab;
+
 		MazePassage mazePassage = Instantiate (prefabPass) as MazePassage;
 		mazePassage.Initialise (_cell, _otherCell, _direction);
 
+		if(mazePassage is MazeDoor)
+		{
+			//Create a new room, excluding the last index
+			_otherCell.SetRoom ((CreateRoom (_cell.room.settingIndex)));
+
+		}
+		else
+		{
+			//initialize with the ongoing room
+			_otherCell.SetRoom (_cell.room);
+		}
+
 		mazePassage = Instantiate (prefabPass) as MazePassage;
 		mazePassage.Initialise (_otherCell, _cell, _direction.GetOpposite());
+	}
+
+	private MazeRoom CreateRoom(int indexToExclude)
+	{
+		MazeRoom newRoom = ScriptableObject.CreateInstance<MazeRoom> ();
+
+		newRoom.settingIndex = Random.Range (0, roomSettings.Length);
+		if(newRoom.settingIndex == indexToExclude)
+		{
+			newRoom.settingIndex = (newRoom.settingIndex + 1) % roomSettings.Length;
+		}
+		newRoom.setting = roomSettings [newRoom.settingIndex];
+		rooms.Add (newRoom);
+		return newRoom;
+
 	}
 
 	#region Helper functions

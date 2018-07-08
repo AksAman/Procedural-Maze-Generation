@@ -72,4 +72,17 @@ MonoBehaviour:
   mazeDoorPrefab: {fileID: 114815702590958354, guid: 97af89749364eeb4ba57f298896eaf12,
     type: 2}
   doorProbability: 0.1
+  roomSettings:
+  - floorMaterial: {fileID: 2100000, guid: 229501863d107fa48a1a40ef2d62b46f, type: 2}
+    wallMaterial: {fileID: 2100000, guid: 229501863d107fa48a1a40ef2d62b46f, type: 2}
+    RoomType: Trees
+  - floorMaterial: {fileID: 2100000, guid: 3018fdf3409a4ef4f84b48fd43e471ce, type: 2}
+    wallMaterial: {fileID: 2100000, guid: 3018fdf3409a4ef4f84b48fd43e471ce, type: 2}
+    RoomType: Fire
+  - floorMaterial: {fileID: 2100000, guid: 0723734297652d54cb8798521241b102, type: 2}
+    wallMaterial: {fileID: 2100000, guid: 0723734297652d54cb8798521241b102, type: 2}
+    RoomType: Water
+  - floorMaterial: {fileID: 2100000, guid: 9a30decd68f44904b9244c0d34535240, type: 2}
+    wallMaterial: {fileID: 2100000, guid: 9a30decd68f44904b9244c0d34535240, type: 2}
+    RoomType: Sand
   indexMethod: 1

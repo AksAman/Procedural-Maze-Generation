@@ -8,5 +8,13 @@ public class MazeWall : MazeCellEdge {
 	// when we are exiting the grid
 	// or the next cell already exists
 
+	public Transform wall;
+
+	public override void Initialise (MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
+	{
+		base.Initialise (_cell, _otherCell, _direction);
+		transform.GetChild(0).GetComponent<Renderer> ().material = _cell.room.setting.wallMaterial;
+	}
+
 
 }

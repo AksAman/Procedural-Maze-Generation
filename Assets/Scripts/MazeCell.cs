@@ -8,6 +8,16 @@ public class MazeCell : MonoBehaviour {
 	private MazeCellEdge[] edges = new MazeCellEdge[MazeDirections.Count];
 	public int initializedEdges;
 
+	// The room this cell belongs to
+	public MazeRoom room;
+
+	public void SetRoom(MazeRoom _room)
+	{
+		_room.Add (this);
+		this.transform.GetChild (0).GetComponent<Renderer> ().material = _room.setting.floorMaterial;
+		this.transform.tag = _room.setting.RoomType;
+	}
+
 	public void SetEdge(MazeCellEdge _edge, mazeDirection _direction)
 	{
 		edges[(int)_direction] = _edge;
