@@ -10,8 +10,22 @@ public class Maze : MonoBehaviour {
 	//Needs reference to individual cell prefabs
 	public MazeCell cellPrefab;
 	private MazeCell[,] cells;
-	public MazeWall mazeWallPrefab;
+	public MazeWall[] mazeWallPrefabs;
 	public MazePassage mazePassPrefab;
+	public MazeDoor mazeDoorPrefab;
+
+	[Range(0,1)]
+	public float doorProbability;
+
+	private enum IndexMethod
+	{
+		Oldest,
+		Newest,
+		Random,
+		Middle
+	}
+	[SerializeField]
+	private IndexMethod indexMethod = new IndexMethod();
 
 	public void Generate()
 	{
@@ -24,7 +38,7 @@ public class Maze : MonoBehaviour {
 		DoFirstGenerationStep (activeCells);
 		while(activeCells.Count > 0)
 		{
-			//			yield return new WaitForSeconds (0.05f);
+//			yield return new WaitForSeconds (0.05f);
 			DoNextGenerationStep (activeCells);
 		}
 		Debug.Log (transform.childCount.ToString ());
@@ -37,7 +51,8 @@ public class Maze : MonoBehaviour {
 
 	void DoNextGenerationStep(List<MazeCell> _activeCells)
 	{
-		int currentIndex = _activeCells.Count - 1;
+		// newest cell index
+		int currentIndex = ChooseIndex(_activeCells.Count);
 		MazeCell currentCell = _activeCells [currentIndex];
 		if(currentCell.isFullyInitialized())
 		{
@@ -91,21 +106,23 @@ public class Maze : MonoBehaviour {
 
 	void CreateWall(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
 	{
-		MazeWall mazeWall = Instantiate (mazeWallPrefab) as MazeWall;
+		
+		MazeWall mazeWall = Instantiate (mazeWallPrefabs[Random.Range(0, mazeWallPrefabs.Length)]) as MazeWall;
 		mazeWall.Initialise (_cell, _otherCell, _direction);
 
 		if (_otherCell != null) {
-			mazeWall = Instantiate (mazeWallPrefab) as MazeWall;
+			mazeWall = Instantiate (mazeWallPrefabs[Random.Range(0, mazeWallPrefabs.Length)]) as MazeWall;
 			mazeWall.Initialise (_otherCell, _cell, _direction.GetOpposite ());
 		}
 	}
 
 	void CreatePassage(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
 	{
-		MazePassage mazePassage = Instantiate (mazePassPrefab) as MazePassage;
+		MazePassage prefabPass = Random.value < doorProbability ? mazeDoorPrefab : mazePassPrefab;
+		MazePassage mazePassage = Instantiate (prefabPass) as MazePassage;
 		mazePassage.Initialise (_cell, _otherCell, _direction);
 
-		mazePassage = Instantiate (mazePassPrefab) as MazePassage;
+		mazePassage = Instantiate (prefabPass) as MazePassage;
 		mazePassage.Initialise (_otherCell, _cell, _direction.GetOpposite());
 	}
 
@@ -137,6 +154,23 @@ public class Maze : MonoBehaviour {
 	public MazeCell GetCell(IntVector2 _coordinates)
 	{
 		return cells [_coordinates.x, _coordinates.z];
+	}
+
+	private int ChooseIndex(int count)
+	{
+		switch (indexMethod) {
+		case IndexMethod.Newest:
+			return count - 1;
+		case IndexMethod.Oldest:
+			return 0;
+		case IndexMethod.Random:
+			return Random.Range(0, count-1);
+		case IndexMethod.Middle:
+			return (int)((count - 1 )/ 2);
+		default:
+			return count - 1;;
+		}
+
 	}
 	#endregion
 }

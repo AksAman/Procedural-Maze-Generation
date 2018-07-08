@@ -56,7 +56,20 @@ MonoBehaviour:
     z: 20
   cellPrefab: {fileID: 114728662721619654, guid: e2050b3e1453f1e409e5bb578bb8b4f1,
     type: 2}
-  mazeWallPrefab: {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311,
-    type: 2}
+  mazeWallPrefabs:
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
+  - {fileID: 114070525324246600, guid: bf88ee2273bffc44a89688e01307c041, type: 2}
+  - {fileID: 114979853876151832, guid: b5cdbf7638328af4ab618c520bd9f917, type: 2}
+  - {fileID: 114080852771027534, guid: 0750d08698239b94389ab41cf839688f, type: 2}
   mazePassPrefab: {fileID: 114071457508006102, guid: 9013d1f46bb772942936eec926e7e560,
     type: 2}
+  mazeDoorPrefab: {fileID: 114815702590958354, guid: 97af89749364eeb4ba57f298896eaf12,
+    type: 2}
+  doorProbability: 0.1
+  indexMethod: 1

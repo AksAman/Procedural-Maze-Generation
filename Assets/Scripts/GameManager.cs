@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour {
 	{
 //		Debug.Log ("Restarting......!");
 //		StopAllCoroutines ();
+//		StopAllCoroutines ();
 		Destroy (mazeInstance.gameObject);
 		BeginGame ();
 	}
