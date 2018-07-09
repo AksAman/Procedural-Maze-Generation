@@ -9,7 +9,7 @@ public class Maze : MonoBehaviour {
 
 	//Needs reference to individual cell prefabs
 	public MazeCell cellPrefab;
-	private MazeCell[,] cells;
+	public MazeCell[,] cells;
 	public GameObject ceilingPrefab;
 	public MazeWall[] mazeWallPrefabs;
 	public MazePassage mazePassPrefab;

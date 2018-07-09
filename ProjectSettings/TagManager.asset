@@ -8,6 +8,7 @@ TagManager:
   - Fire
   - Trees
   - Sand
+  - Door
   layers:
   - Default
   - TransparentFX

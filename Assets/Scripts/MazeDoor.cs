@@ -3,6 +3,7 @@
 public class MazeDoor : MazePassage {
 
 	public Transform hinge;
+	public bool isOpen;
 
 	private MazeDoor OtherSideDoor{
 		get
@@ -14,6 +15,7 @@ public class MazeDoor : MazePassage {
 	public override void Initialise(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
 	{
 		base.Initialise (_cell, _otherCell, _direction);
+		this.isOpen = false;
 
 		if(OtherSideDoor != null)
 		{
@@ -31,5 +33,17 @@ public class MazeDoor : MazePassage {
 				doorTransform.GetComponent<Renderer> ().material = _cell.room.setting.wallMaterial;
 			}
 		}
+	}
+
+	public void OpenDoor()
+	{
+		hinge.localRotation = OtherSideDoor.hinge.localRotation = Quaternion.Euler (0f, 90f, 0f);
+		isOpen = true;
+	}
+
+	public void CloseDoor()
+	{
+		hinge.localRotation = OtherSideDoor.hinge.localRotation = Quaternion.Euler (0f, 0f, 0f);
+		isOpen = false;
 	}
 }
