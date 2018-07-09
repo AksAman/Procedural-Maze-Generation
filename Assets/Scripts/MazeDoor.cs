@@ -22,5 +22,14 @@ public class MazeDoor : MazePassage {
 			hingePos.x = -hingePos.x;
 			hinge.localPosition = hingePos;
 		}
+
+		for(int i=0; i<transform.childCount; i++)
+		{
+			Transform doorTransform = transform.GetChild (i);
+			if(doorTransform != hinge)
+			{
+				doorTransform.GetComponent<Renderer> ().material = _cell.room.setting.wallMaterial;
+			}
+		}
 	}
 }

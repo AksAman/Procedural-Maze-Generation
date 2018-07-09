@@ -56,6 +56,8 @@ MonoBehaviour:
     z: 20
   cellPrefab: {fileID: 114728662721619654, guid: e2050b3e1453f1e409e5bb578bb8b4f1,
     type: 2}
+  ceilingPrefab: {fileID: 1511113231969728, guid: 953684d3ca02e024e97d6fd1bfb5c74c,
+    type: 2}
   mazeWallPrefabs:
   - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
   - {fileID: 114292255154500194, guid: 1c7bab6b9fcc23648a4d6f988eade311, type: 2}
@@ -85,4 +87,7 @@ MonoBehaviour:
   - floorMaterial: {fileID: 2100000, guid: 9a30decd68f44904b9244c0d34535240, type: 2}
     wallMaterial: {fileID: 2100000, guid: 9a30decd68f44904b9244c0d34535240, type: 2}
     RoomType: Sand
+  singlePrefab: {fileID: 1140451313335012, guid: 60932b9ffe5da5b4b948faa3bb3d5f5c,
+    type: 2}
+  expandRooms: 1
   indexMethod: 1

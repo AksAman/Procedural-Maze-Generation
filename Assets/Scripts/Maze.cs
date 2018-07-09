@@ -10,6 +10,7 @@ public class Maze : MonoBehaviour {
 	//Needs reference to individual cell prefabs
 	public MazeCell cellPrefab;
 	private MazeCell[,] cells;
+	public GameObject ceilingPrefab;
 	public MazeWall[] mazeWallPrefabs;
 	public MazePassage mazePassPrefab;
 	public MazeDoor mazeDoorPrefab;
@@ -21,7 +22,9 @@ public class Maze : MonoBehaviour {
 	private List<MazeRoom> rooms = new List<MazeRoom>();
 	[Space]
 	public MazeRoomSetting[] roomSettings = new MazeRoomSetting[4];
+	public GameObject singlePrefab;
 
+	public bool expandRooms;
 	private enum IndexMethod
 	{
 		Oldest,
@@ -45,10 +48,20 @@ public class Maze : MonoBehaviour {
 		DoFirstGenerationStep (activeCells);
 		while(activeCells.Count > 0)
 		{
-//			yield return new WaitForSeconds (0.05f);
+//			yield return new WaitForSeconds (0.03f);
 			DoNextGenerationStep (activeCells);
 		}
-		Debug.Log (transform.childCount.ToString ());
+
+		foreach (MazeRoom room in rooms) {
+			if(room.roomSize == 1)
+			{
+				GameObject singleCube = Instantiate (singlePrefab, room.cells [0].transform.position, Quaternion.identity, room.cells [0].transform) as GameObject;
+			}
+		}
+
+		GameObject ceiling = Instantiate (ceilingPrefab, this.transform);
+		ceiling.transform.GetChild (0).localScale = new Vector3 (size.x / 10f, 1, size.z / 10f);
+		ceiling.transform.position = this.transform.position;
 	}
 
 	void DoFirstGenerationStep(List<MazeCell> _activeCells)
@@ -86,6 +99,10 @@ public class Maze : MonoBehaviour {
 				CreatePassage (currentCell, neighbourCell, nextDirection);
 				_activeCells.Add (neighbourCell);
 			}
+			else if(currentCell.room == neighbourCell.room && expandRooms)
+			{
+				CreatePassageInSameRoom (currentCell, neighbourCell, nextDirection);
+			}
 			else
 			{
 				CreateWall (currentCell, neighbourCell, nextDirection);
@@ -121,6 +138,16 @@ public class Maze : MonoBehaviour {
 			mazeWall = Instantiate (mazeWallPrefabs[Random.Range(0, mazeWallPrefabs.Length)]) as MazeWall;
 			mazeWall.Initialise (_otherCell, _cell, _direction.GetOpposite ());
 		}
+	}
+
+	void CreatePassageInSameRoom(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
+	{
+		MazePassage mazePassage = Instantiate (mazePassPrefab);
+		mazePassage.Initialise (_cell, _otherCell, _direction);
+
+		mazePassage = Instantiate (mazePassPrefab);
+		mazePassage.Initialise (_otherCell, _cell, _direction.GetOpposite());
+
 	}
 
 	void CreatePassage(MazeCell _cell, MazeCell _otherCell, mazeDirection _direction)
